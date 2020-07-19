@@ -1,24 +1,42 @@
-float x;
-float y;
+//idea: mouse controlled waves, random generated wave pattern
 
-float xoff = 0.0;
+float sw;
+float yStep = 20;
+float arcSize = 100;
 
 void setup()
 {
-  background(10);
   size(1000, 1000);
-  noiseSeed(121212);
 }
 
 void draw()
 {
-  noiseDetail(1, 1);
+  //trail effect setup
+  blendMode(SUBTRACT);
+  fill(255, 10);
+  rect(0, 0, width, height);
+  blendMode(BLEND);
 
-  x = map(sin(radians(frameCount*2)), -1, 1, 50, width-50);
-  y = map(cos(radians(frameCount*2)), -1, 1, 50, height-50);
+  mouseX = constrain(mouseX, 10, width);
+  mouseY = constrain(mouseY, 10, height);
 
-  stroke(255);
-  line(x, y, x, height);
+  yStep = mouseY;
+  arcSize = mouseX;
 
-  xoff = xoff + .1;
+  noFill();
+  stroke(120, 0, random(20, 255));
+  strokeWeight(2);
+
+  //arc grid
+  for (int y = 0; y<height; y+=yStep/2)
+  {
+    sw = map(sin(radians(y)), -1, 1, 2, 5);
+    strokeWeight(sw);
+
+    for (int x = 0; x<width+arcSize; x+=arcSize)
+    {
+      arc(x, y, arcSize/2, arcSize/2, 0, PI);
+      arc(x+arcSize/2, y, arcSize/2, arcSize/2, PI, TWO_PI);
+    }
+  }
 }
